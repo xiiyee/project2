@@ -1,0 +1,44 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..95ddc18 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -78,7 +78,7 @@
+               v-for="(item, index) in navItems" 
+               :key="index"
+               :href="item.href"
+-              @click="mobileMenuOpen = false"
++              @click="closeMobileMenu"
+               :class="[
+                 'transition-colors duration-300 py-2',
+                 isDark ? 'text-[#bac2de] hover:text-[#cba6f7]' : 'text-[#5c5f77] hover:text-[#8839ef]'
+@@ -364,6 +364,7 @@ const fullText: string = 'Stefano Bichicchi';
+ const typingIndex = ref<number>(0);
+ const mobileMenuOpen = ref<boolean>(false);
+ const currentYear = ref<number>(new Date().getFullYear());
++const isMenuToggling = ref<boolean>(false);
+ 
+ const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
+ const currentEmoji = ref<string>(emojis[0]);
+@@ -520,8 +521,22 @@ const triggerEmojiAnimation = (): void => {
+   }, 100);
+ };
+ 
++const closeMobileMenu = (): void => {
++  if (!mobileMenuOpen.value || isMenuToggling.value) return;
++  isMenuToggling.value = true;
++  mobileMenuOpen.value = false;
++  setTimeout(() => {
++    isMenuToggling.value = false;
++  }, 350);
++};
++
+ const toggleMobileMenu = (): void => {
++  if (isMenuToggling.value) return;
++  isMenuToggling.value = true;
+   mobileMenuOpen.value = !mobileMenuOpen.value;
++  setTimeout(() => {
++    isMenuToggling.value = false;
++  }, 350);
+ };
+ 
+ let typingInterval: number | null = null;
