@@ -65,7 +65,15 @@
           </button>
         </div>
       </div>
-      <Transition name="slide">
+      <Transition
+        name="slide"
+        @before-enter="handleMobileMenuTransitionStart"
+        @before-leave="handleMobileMenuTransitionStart"
+        @after-enter="handleMobileMenuTransitionEnd"
+        @after-leave="handleMobileMenuTransitionEnd"
+        @enter-cancelled="handleMobileMenuTransitionEnd"
+        @leave-cancelled="handleMobileMenuTransitionEnd"
+      >
         <div 
           v-if="mobileMenuOpen" 
           :class="[
@@ -78,7 +86,7 @@
               v-for="(item, index) in navItems" 
               :key="index"
               :href="item.href"
-              @click="mobileMenuOpen = false"
+              @click="closeMobileMenu"
               :class="[
                 'transition-colors duration-300 py-2',
                 isDark ? 'text-[#bac2de] hover:text-[#cba6f7]' : 'text-[#5c5f77] hover:text-[#8839ef]'
@@ -363,6 +371,8 @@ const displayText = ref<string>('');
 const fullText: string = 'Stefano Bichicchi';
 const typingIndex = ref<number>(0);
 const mobileMenuOpen = ref<boolean>(false);
+const mobileMenuTransitioning = ref<boolean>(false);
+const pendingMobileMenuState = ref<boolean | null>(null);
 const currentYear = ref<number>(new Date().getFullYear());
 
 const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
@@ -520,8 +530,42 @@ const triggerEmojiAnimation = (): void => {
   }, 100);
 };
 
+const setMobileMenuState = (nextState: boolean): void => {
+  if (mobileMenuTransitioning.value) {
+    pendingMobileMenuState.value = nextState;
+    return;
+  }
+
+  pendingMobileMenuState.value = null;
+  mobileMenuOpen.value = nextState;
+};
+
 const toggleMobileMenu = (): void => {
-  mobileMenuOpen.value = !mobileMenuOpen.value;
+  const currentTargetState = pendingMobileMenuState.value ?? mobileMenuOpen.value;
+  setMobileMenuState(!currentTargetState);
+};
+
+const closeMobileMenu = (): void => {
+  setMobileMenuState(false);
+};
+
+const handleMobileMenuTransitionStart = (): void => {
+  mobileMenuTransitioning.value = true;
+};
+
+const handleMobileMenuTransitionEnd = (): void => {
+  mobileMenuTransitioning.value = false;
+
+  if (pendingMobileMenuState.value === null) {
+    return;
+  }
+
+  const nextState = pendingMobileMenuState.value;
+  pendingMobileMenuState.value = null;
+
+  if (nextState !== mobileMenuOpen.value) {
+    mobileMenuOpen.value = nextState;
+  }
 };
 
 let typingInterval: number | null = null;
