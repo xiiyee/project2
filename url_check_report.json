@@ -1,0 +1,165 @@
+{
+  "url": "http://localhost:60528",
+  "startedAt": 1774682724355,
+  "finishedAt": 1774682733979,
+  "errors": {
+    "js": [],
+    "network": [],
+    "images": []
+  },
+  "styleAudit": {
+    "rate": 0,
+    "unuseClasses": [],
+    "unuseCount": 0,
+    "definedCount": 177,
+    "scannedElementCount": 88,
+    "inaccessibleStyleSheets": 0
+  },
+  "perfTags": [
+    {
+      "name": "lcp",
+      "value": 125.33333333333333,
+      "unit": "ms",
+      "source": "performance",
+      "category": "good"
+    },
+    {
+      "name": "cls",
+      "value": 0.00016743976905094158,
+      "unit": "unitless",
+      "source": "performance",
+      "category": "good"
+    },
+    {
+      "name": "fcp",
+      "value": 125.33333333333333,
+      "unit": "ms",
+      "source": "performance",
+      "category": "good"
+    },
+    {
+      "name": "ttfb",
+      "value": 10.033333341280619,
+      "unit": "ms",
+      "source": "performance",
+      "category": "good"
+    }
+  ],
+  "perfProfiles": [
+    {
+      "profile": "unthrottled",
+      "tags": [
+        {
+          "name": "lcp",
+          "value": 125.33333333333333,
+          "unit": "ms",
+          "source": "performance",
+          "category": "good"
+        },
+        {
+          "name": "cls",
+          "value": 0.00016743976905094158,
+          "unit": "unitless",
+          "source": "performance",
+          "category": "good"
+        },
+        {
+          "name": "fcp",
+          "value": 125.33333333333333,
+          "unit": "ms",
+          "source": "performance",
+          "category": "good"
+        },
+        {
+          "name": "ttfb",
+          "value": 10.033333341280619,
+          "unit": "ms",
+          "source": "performance",
+          "category": "good"
+        }
+      ]
+    },
+    {
+      "profile": "4g",
+      "tags": [
+        {
+          "name": "lcp",
+          "value": 672,
+          "unit": "ms",
+          "source": "performance",
+          "category": "good"
+        },
+        {
+          "name": "cls",
+          "value": 0.00016743976905094158,
+          "unit": "unitless",
+          "source": "performance",
+          "category": "good"
+        },
+        {
+          "name": "fcp",
+          "value": 672,
+          "unit": "ms",
+          "source": "performance",
+          "category": "good"
+        },
+        {
+          "name": "ttfb",
+          "value": 7.100000003973643,
+          "unit": "ms",
+          "source": "performance",
+          "category": "good"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "jsErrorCount": 0,
+    "failedStaticResources": 0,
+    "firstScreenIssues": 0,
+    "styleMismatchRate": 0,
+    "styleMismatchCount": 0,
+    "styleDefinedCount": 177,
+    "styleMismatchClasses": [],
+    "styleAcceptable": true,
+    "performance": {
+      "unthrottled": {
+        "lcp": {
+          "value": 125.33333333333333,
+          "category": "good"
+        },
+        "cls": {
+          "value": 0.00016743976905094158,
+          "category": "good"
+        },
+        "fcp": {
+          "value": 125.33333333333333,
+          "category": "good"
+        },
+        "ttfb": {
+          "value": 10.033333341280619,
+          "category": "good"
+        }
+      },
+      "4g": {
+        "lcp": {
+          "value": 672,
+          "category": "good"
+        },
+        "cls": {
+          "value": 0.00016743976905094158,
+          "category": "good"
+        },
+        "fcp": {
+          "value": 672,
+          "category": "good"
+        },
+        "ttfb": {
+          "value": 7.100000003973643,
+          "category": "good"
+        }
+      }
+    },
+    "finalScore": 100
+  }
+}
