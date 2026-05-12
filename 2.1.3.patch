@@ -1,0 +1,35 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..8ae6cd5 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -65,7 +65,13 @@
+           </button>
+         </div>
+       </div>
+-      <Transition name="slide">
++      <Transition 
++        name="slide"
++        @before-enter="isMenuTransitioning = true"
++        @after-enter="isMenuTransitioning = false"
++        @before-leave="isMenuTransitioning = true"
++        @after-leave="isMenuTransitioning = false"
++      >
+         <div 
+           v-if="mobileMenuOpen" 
+           :class="[
+@@ -363,6 +369,7 @@ const displayText = ref<string>('');
+ const fullText: string = 'Stefano Bichicchi';
+ const typingIndex = ref<number>(0);
+ const mobileMenuOpen = ref<boolean>(false);
++const isMenuTransitioning = ref<boolean>(false);
+ const currentYear = ref<number>(new Date().getFullYear());
+ 
+ const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
+@@ -521,6 +528,7 @@ const triggerEmojiAnimation = (): void => {
+ };
+ 
+ const toggleMobileMenu = (): void => {
++  if (isMenuTransitioning.value) return;
+   mobileMenuOpen.value = !mobileMenuOpen.value;
+ };
+ 
