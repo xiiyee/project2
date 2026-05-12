@@ -1,0 +1,57 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..15f06b0 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -65,9 +65,17 @@
+           </button>
+         </div>
+       </div>
+-      <Transition name="slide">
++      <Transition 
++        name="slide"
++        @before-enter="isMenuTransitioning = true"
++        @after-enter="isMenuTransitioning = false"
++        @enter-cancelled="isMenuTransitioning = false"
++        @before-leave="isMenuTransitioning = true"
++        @after-leave="isMenuTransitioning = false"
++        @leave-cancelled="isMenuTransitioning = false"
++      >
+         <div 
+-          v-if="mobileMenuOpen" 
++          v-show="mobileMenuOpen" 
+           :class="[
+             'md:hidden border-t transition-colors duration-500',
+             isDark ? 'bg-[#181825] border-[#313244]' : 'bg-[#e6e9ef] border-[#ccd0da]'
+@@ -78,7 +86,7 @@
+               v-for="(item, index) in navItems" 
+               :key="index"
+               :href="item.href"
+-              @click="mobileMenuOpen = false"
++              @click="closeMobileMenu"
+               :class="[
+                 'transition-colors duration-300 py-2',
+                 isDark ? 'text-[#bac2de] hover:text-[#cba6f7]' : 'text-[#5c5f77] hover:text-[#8839ef]'
+@@ -363,6 +371,7 @@ const displayText = ref<string>('');
+ const fullText: string = 'Stefano Bichicchi';
+ const typingIndex = ref<number>(0);
+ const mobileMenuOpen = ref<boolean>(false);
++const isMenuTransitioning = ref<boolean>(false);
+ const currentYear = ref<number>(new Date().getFullYear());
+ 
+ const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
+@@ -521,9 +530,15 @@ const triggerEmojiAnimation = (): void => {
+ };
+ 
+ const toggleMobileMenu = (): void => {
++  if (isMenuTransitioning.value) return;
+   mobileMenuOpen.value = !mobileMenuOpen.value;
+ };
+ 
++const closeMobileMenu = (): void => {
++  if (isMenuTransitioning.value || !mobileMenuOpen.value) return;
++  mobileMenuOpen.value = false;
++};
++
+ let typingInterval: number | null = null;
+ 
+ onMounted(() => {
