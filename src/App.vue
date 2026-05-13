@@ -1,5 +1,8 @@
 <template>
-  <div 
+  <template v-if="currentRoute === '#blog'">
+    <Blog :isDark="isDark" @toggle-theme="toggleTheme" />
+  </template>
+  <div v-else
     :class="[
       'min-h-screen snap-y snap-mandatory overflow-y-scroll h-screen scroll-smooth transition-colors duration-500',
       isDark ? 'bg-[#1e1e2e] text-[#cdd6f4]' : 'bg-[#eff1f5] text-[#4c4f69]'
@@ -334,7 +337,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import Blog from './pages/Blog.vue';
 
 interface TimelineItem {
   type: 'work' | 'education';
@@ -375,8 +379,17 @@ const navItems = [
   { label: 'Home', href: '#' },
   { label: 'Works', href: '#works' },
   { label: 'Skills', href: '#skills' },
+  { label: 'Blog', href: '#blog' },
   { label: 'Contact', href: '#contact' },
 ];
+
+const currentRoute = ref(window.location.hash);
+
+onMounted(() => {
+  window.addEventListener('hashchange', () => {
+    currentRoute.value = window.location.hash;
+  });
+});
 
 const timeline: TimelineItem[] = [
   {
