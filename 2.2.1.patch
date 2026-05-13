@@ -1,0 +1,112 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..3f2c6a7 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -264,6 +264,57 @@
+       </div>
+     </section>
+ 
++    <!-- Projects Section -->
++    <section id="projects" class="snap-start min-h-screen py-20 px-4 sm:px-6 overflow-y-auto">
++      <div class="max-w-6xl mx-auto">
++        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
++          <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Featured</span> <span :class="isDark ? 'text-[#89dceb]' : 'text-[#04a5e5]'">Projects</span>
++        </h2>
++        <p :class="['text-center mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">A selection of products focused on performance, usability, and polish</p>
++
++        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
++          <article
++            v-for="(project, index) in projects"
++            :key="index"
++            :class="[
++              'flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg',
++              isDark
++                ? 'bg-[#181825] border-[#313244] hover:border-[#89dceb] hover:shadow-[#89dceb]/10'
++                : 'bg-[#e6e9ef] border-[#ccd0da] hover:border-[#04a5e5] hover:shadow-[#04a5e5]/10'
++            ]"
++          >
++            <div class="mb-4 flex flex-wrap gap-2">
++              <span
++                v-for="tag in project.tags"
++                :key="tag"
++                :class="[
++                  'rounded-full border px-3 py-1 text-xs font-medium',
++                  isDark
++                    ? 'bg-[#1e1e2e] border-[#313244] text-[#bac2de]'
++                    : 'bg-[#eff1f5] border-[#ccd0da] text-[#5c5f77]'
++                ]"
++              >
++                {{ tag }}
++              </span>
++            </div>
++            <h3 :class="['text-2xl font-bold mb-3', isDark ? 'text-[#cdd6f4]' : 'text-[#4c4f69]']">{{ project.name }}</h3>
++            <p :class="['mb-6 flex-1 leading-relaxed', isDark ? 'text-[#bac2de]' : 'text-[#5c5f77]']">{{ project.description }}</p>
++            <a
++              :href="project.href"
++              :class="[
++                'inline-flex items-center justify-center rounded-lg px-4 py-3 font-semibold transition-all duration-300',
++                isDark
++                  ? 'bg-[#89dceb] text-[#11111b] hover:bg-[#74c7ec]'
++                  : 'bg-[#04a5e5] text-[#eff1f5] hover:bg-[#209fb5]'
++              ]"
++            >
++              查看详情
++            </a>
++          </article>
++        </div>
++      </div>
++    </section>
++
+     <!-- Footer Section -->
+     <footer 
+       id="contact"
+@@ -358,6 +409,13 @@ interface SocialLink {
+   url: string;
+ }
+ 
++interface ProjectItem {
++  name: string;
++  tags: string[];
++  description: string;
++  href: string;
++}
++
+ const isDark = ref<boolean>(true);
+ const displayText = ref<string>('');
+ const fullText: string = 'Stefano Bichicchi';
+@@ -375,6 +433,7 @@ const navItems = [
+   { label: 'Home', href: '#' },
+   { label: 'Works', href: '#works' },
+   { label: 'Skills', href: '#skills' },
++  { label: 'Projects', href: '#projects' },
+   { label: 'Contact', href: '#contact' },
+ ];
+ 
+@@ -440,6 +499,27 @@ const frameworks: string[] = [
+   'Storybook', 'Figma', 'Linux', 'Nginx'
+ ];
+ 
++const projects: ProjectItem[] = [
++  {
++    name: 'Catppuccin Commerce Dashboard',
++    tags: ['Vue 3', 'TypeScript', 'Tailwind CSS'],
++    description: 'A polished analytics dashboard for e-commerce teams with live sales metrics, inventory tracking, and a fast mobile-first experience.',
++    href: '#contact'
++  },
++  {
++    name: 'Realtime Collaboration Hub',
++    tags: ['Nuxt', 'WebSocket', 'Node.js'],
++    description: 'A collaborative workspace designed for distributed teams, featuring live cursors, shared boards, and dependable synchronization flows.',
++    href: '#contact'
++  },
++  {
++    name: 'Portfolio CMS Studio',
++    tags: ['Vue', 'Pinia', 'REST API'],
++    description: 'A content management studio for creators to publish case studies, organize assets, and update landing pages without touching code.',
++    href: '#contact'
++  },
++];
++
+ const socialLinks: SocialLink[] = [
+   { name: 'GitHub', icon: '🐙', url: 'https://github.com' },
+   { name: 'LinkedIn', icon: '💼', url: 'https://linkedin.com' },
