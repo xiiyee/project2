@@ -264,6 +264,56 @@
       </div>
     </section>
 
+    <!-- Projects Section -->
+    <section id="projects" class="snap-start min-h-screen py-20 px-4 sm:px-6 overflow-y-auto">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
+          <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">My</span> <span :class="isDark ? 'text-[#f38ba8]' : 'text-[#d20f39]'">Projects</span>
+        </h2>
+        <p :class="['text-center mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">Featured work and personal creations</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div 
+            v-for="(project, index) in projects" 
+            :key="index"
+            :class="[
+              'rounded-xl border p-6 flex flex-col gap-4 transition-all duration-300 transform hover:scale-105',
+              isDark 
+                ? 'bg-[#181825] border-[#313244] hover:border-[#cba6f7]' 
+                : 'bg-[#e6e9ef] border-[#ccd0da] hover:border-[#8839ef]'
+            ]"
+          >
+            <h3 :class="['text-xl font-bold', isDark ? 'text-[#cdd6f4]' : 'text-[#4c4f69]']">{{ project.name }}</h3>
+            <div class="flex flex-wrap gap-2">
+              <span 
+                v-for="(tag, tagIndex) in project.tags" 
+                :key="tagIndex"
+                :class="[
+                  'px-3 py-1 rounded-full text-xs font-medium',
+                  isDark 
+                    ? 'bg-[#313244] text-[#cba6f7]' 
+                    : 'bg-[#ccd0da] text-[#8839ef]'
+                ]"
+              >
+                {{ tag }}
+              </span>
+            </div>
+            <p :class="['text-sm flex-grow', isDark ? 'text-[#bac2de]' : 'text-[#5c5f77]']">{{ project.description }}</p>
+            <button 
+              :class="[
+                'w-full py-2 rounded-lg font-medium transition-all duration-300',
+                isDark 
+                  ? 'bg-[#313244] text-[#cdd6f4] hover:bg-[#45475a]' 
+                  : 'bg-[#ccd0da] text-[#4c4f69] hover:bg-[#acb0be]'
+              ]"
+            >
+              查看详情
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer Section -->
     <footer 
       id="contact"
@@ -358,6 +408,12 @@ interface SocialLink {
   url: string;
 }
 
+interface Project {
+  name: string;
+  tags: string[];
+  description: string;
+}
+
 const isDark = ref<boolean>(true);
 const displayText = ref<string>('');
 const fullText: string = 'Stefano Bichicchi';
@@ -375,6 +431,7 @@ const navItems = [
   { label: 'Home', href: '#' },
   { label: 'Works', href: '#works' },
   { label: 'Skills', href: '#skills' },
+  { label: 'Projects', href: '#projects' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -446,6 +503,24 @@ const socialLinks: SocialLink[] = [
   { name: 'Twitter', icon: '🐦', url: 'https://twitter.com' },
   { name: 'Email', icon: '📧', url: 'mailto:stefano@example.com' },
   { name: 'Dev.to', icon: '📝', url: 'https://dev.to' },
+];
+
+const projects: Project[] = [
+  {
+    name: 'E-Commerce Platform',
+    tags: ['Vue.js', 'Node.js', 'PostgreSQL', 'Stripe'],
+    description: 'A full-featured online store with real-time inventory management, secure payment processing, and an admin dashboard for tracking sales analytics.'
+  },
+  {
+    name: 'Task Management App',
+    tags: ['React', 'TypeScript', 'Firebase', 'Tailwind'],
+    description: 'Collaborative project management tool featuring drag-and-drop boards, real-time updates, team collaboration, and notification system.'
+  },
+  {
+    name: 'Weather Dashboard',
+    tags: ['Vue 3', 'OpenWeather API', 'Chart.js', 'Vite'],
+    description: 'Beautiful weather application with 7-day forecasts, interactive charts, location-based weather alerts, and dark/light theme support.'
+  }
 ];
 
 const toggleTheme = (): void => {
