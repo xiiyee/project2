@@ -1,0 +1,127 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..dc2271e 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -94,14 +94,18 @@
+     <!-- Home Section -->
+     <section class="snap-start min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6">
+       <div class="max-w-4xl mx-auto text-center">
+-        <div class="mb-8">
+-          <span 
+-            class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
+-            :class="{ 'animate-bounce': isAnimating }"
+-            @click="triggerEmojiAnimation"
+-          >
+-            {{ currentEmoji }}
+-          </span>
++        <div class="mb-8 flex justify-center items-center h-32 md:h-40">
++          <Transition name="emoji-fade" mode="out-in">
++            <span 
++              :key="isAnimating ? 'animating' : 'static'"
++              class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
++              :class="isAnimating ? 'animate-bounce emoji-carousel' : 'hover:scale-110 transition-transform duration-300'"
++              @click="triggerEmojiAnimation"
++              @animationend="onEmojiAnimationEnd"
++            >
++              {{ isAnimating ? '' : '👨‍💻' }}
++            </span>
++          </Transition>
+         </div>
+         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+           Hi, I'm <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Stefano Bichicchi</span>
+@@ -365,10 +369,7 @@ const typingIndex = ref<number>(0);
+ const mobileMenuOpen = ref<boolean>(false);
+ const currentYear = ref<number>(new Date().getFullYear());
+ 
+-const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
+-const currentEmoji = ref<string>(emojis[0]);
+ const isAnimating = ref<boolean>(false);
+-let emojiInterval: number | null = null;
+ let audioContext: AudioContext | null = null;
+ 
+ const navItems = [
+@@ -496,28 +497,14 @@ const typeText = (): void => {
+ };
+ 
+ const triggerEmojiAnimation = (): void => {
++  if (isAnimating.value) return;
+   isAnimating.value = true;
+-  let emojiIndex = 0;
+-  const maxIterations = 15;
+-  let iteration = 0;
+-  
+-  if (emojiInterval) {
+-    clearInterval(emojiInterval);
++};
++
++const onEmojiAnimationEnd = (e: AnimationEvent): void => {
++  if (e.animationName === 'emoji-spin') {
++    isAnimating.value = false;
+   }
+-  
+-  emojiInterval = window.setInterval(() => {
+-    currentEmoji.value = emojis[emojiIndex % emojis.length];
+-    emojiIndex++;
+-    iteration++;
+-    
+-    if (iteration >= maxIterations) {
+-      if (emojiInterval) {
+-        clearInterval(emojiInterval);
+-      }
+-      currentEmoji.value = emojis[0];
+-      isAnimating.value = false;
+-    }
+-  }, 100);
+ };
+ 
+ const toggleMobileMenu = (): void => {
+@@ -538,7 +525,6 @@ onMounted(() => {
+ 
+ onUnmounted(() => {
+   if (typingInterval) clearInterval(typingInterval);
+-  if (emojiInterval) clearInterval(emojiInterval);
+ });
+ </script>
+ 
+@@ -554,6 +540,41 @@ onUnmounted(() => {
+   transform: translateY(-10px);
+ }
+ 
++.emoji-fade-enter-active,
++.emoji-fade-leave-active {
++  transition: opacity 0.15s ease, transform 0.15s ease;
++}
++
++.emoji-fade-enter-from,
++.emoji-fade-leave-to {
++  opacity: 0;
++  transform: scale(0.8);
++}
++
++.emoji-carousel::before {
++  content: '👨‍💻';
++  animation: emoji-spin 1.5s step-end forwards;
++}
++
++@keyframes emoji-spin {
++  0% { content: '👨‍💻'; }
++  6.66% { content: '🚀'; }
++  13.33% { content: '💡'; }
++  20% { content: '🎯'; }
++  26.66% { content: '☕'; }
++  33.33% { content: '✨'; }
++  40% { content: '🔥'; }
++  46.66% { content: '💻'; }
++  53.33% { content: '👨‍💻'; }
++  60% { content: '🚀'; }
++  66.66% { content: '💡'; }
++  73.33% { content: '🎯'; }
++  80% { content: '☕'; }
++  86.66% { content: '✨'; }
++  93.33% { content: '🔥'; }
++  100% { content: '👨‍💻'; }
++}
++
+ html {
+   scroll-behavior: smooth;
+ }
