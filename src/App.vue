@@ -264,6 +264,9 @@
       </div>
     </section>
 
+    <!-- Blog Section -->
+    <Blog :isDark="isDark" />
+
     <!-- Footer Section -->
     <footer 
       id="contact"
@@ -335,6 +338,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
+import Blog from './pages/Blog.vue';
 
 interface TimelineItem {
   type: 'work' | 'education';
@@ -375,6 +379,7 @@ const navItems = [
   { label: 'Home', href: '#' },
   { label: 'Works', href: '#works' },
   { label: 'Skills', href: '#skills' },
+  { label: 'Blog', href: '#blog' },
   { label: 'Contact', href: '#contact' },
 ];
 
