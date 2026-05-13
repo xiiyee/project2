@@ -1,0 +1,111 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..9e8eec2 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -264,6 +264,60 @@
+       </div>
+     </section>
+ 
++    <!-- Projects Section -->
++    <section id="projects" class="snap-start min-h-screen py-20 px-4 sm:px-6 overflow-y-auto">
++      <div class="max-w-6xl mx-auto">
++        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
++          <span :class="isDark ? 'text-[#f9e2af]' : 'text-[#df8e1d]'">Featured</span> <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Projects</span>
++        </h2>
++        <p :class="['text-center mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">Some things I've built</p>
++
++        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
++          <div 
++            v-for="(project, index) in projects" 
++            :key="index"
++            :class="[
++              'group flex flex-col p-6 rounded-xl border transition-all duration-300 transform hover:scale-105 hover:shadow-lg',
++              isDark 
++                ? 'bg-[#181825] border-[#313244] hover:border-[#cba6f7] hover:shadow-[#cba6f7]/10' 
++                : 'bg-[#e6e9ef] border-[#ccd0da] hover:border-[#8839ef] hover:shadow-[#8839ef]/10'
++            ]"
++          >
++            <h3 :class="['text-xl font-bold mb-3', isDark ? 'text-[#cdd6f4]' : 'text-[#4c4f69]']">
++              {{ project.name }}
++            </h3>
++            <div class="flex flex-wrap gap-2 mb-4">
++              <span 
++                v-for="(tag, tagIndex) in project.tags" 
++                :key="tagIndex"
++                :class="[
++                  'px-3 py-1 rounded-full text-xs font-medium',
++                  isDark 
++                    ? 'bg-[#313244] text-[#cba6f7]' 
++                    : 'bg-[#ccd0da] text-[#8839ef]'
++                ]"
++              >
++                {{ tag }}
++              </span>
++            </div>
++            <p :class="['text-sm leading-relaxed mb-6 flex-1', isDark ? 'text-[#bac2de]' : 'text-[#5c5f77]']">
++              {{ project.description }}
++            </p>
++            <button 
++              :class="[
++                'self-start px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-300 transform hover:scale-105',
++                isDark 
++                  ? 'bg-[#cba6f7] text-[#1e1e2e] hover:bg-[#b4befe]' 
++                  : 'bg-[#8839ef] text-[#eff1f5] hover:bg-[#7287fd]'
++              ]"
++            >
++              查看详情
++            </button>
++          </div>
++        </div>
++      </div>
++    </section>
++
+     <!-- Footer Section -->
+     <footer 
+       id="contact"
+@@ -358,6 +412,12 @@ interface SocialLink {
+   url: string;
+ }
+ 
++interface Project {
++  name: string;
++  tags: string[];
++  description: string;
++}
++
+ const isDark = ref<boolean>(true);
+ const displayText = ref<string>('');
+ const fullText: string = 'Stefano Bichicchi';
+@@ -375,6 +435,7 @@ const navItems = [
+   { label: 'Home', href: '#' },
+   { label: 'Works', href: '#works' },
+   { label: 'Skills', href: '#skills' },
++  { label: 'Projects', href: '#projects' },
+   { label: 'Contact', href: '#contact' },
+ ];
+ 
+@@ -440,6 +501,24 @@ const frameworks: string[] = [
+   'Storybook', 'Figma', 'Linux', 'Nginx'
+ ];
+ 
++const projects: Project[] = [
++  {
++    name: 'CloudSync Dashboard',
++    tags: ['Vue.js', 'TypeScript', 'Tailwind CSS', 'Firebase'],
++    description: 'A real-time cloud infrastructure monitoring dashboard with interactive charts, alert management, and team collaboration features.'
++  },
++  {
++    name: 'DevFlow CLI',
++    tags: ['Node.js', 'Go', 'PostgreSQL', 'Docker'],
++    description: 'A command-line tool that automates development workflows, from project scaffolding to CI/CD pipeline generation and deployment.'
++  },
++  {
++    name: 'PixelForge Editor',
++    tags: ['React', 'WebGL', 'Rust', 'WASM'],
++    description: 'A browser-based image editor with GPU-accelerated filters, layer management, and plugin support powered by WebAssembly.'
++  }
++];
++
+ const socialLinks: SocialLink[] = [
+   { name: 'GitHub', icon: '🐙', url: 'https://github.com' },
+   { name: 'LinkedIn', icon: '💼', url: 'https://linkedin.com' },
