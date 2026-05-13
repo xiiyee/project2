@@ -264,59 +264,83 @@
       </div>
     </section>
 
-    <!-- Footer Section -->
-    <footer 
-      id="contact"
-      :class="[
-        'snap-start min-h-screen flex items-center px-4 sm:px-6 transition-colors duration-500',
-        isDark ? 'bg-[#11111b]' : 'bg-[#dce0e8]'
-      ]"
-    >
-      <div class="max-w-4xl mx-auto text-center w-full">
+    <!-- Projects Section -->
+    <section id="projects" class="snap-start min-h-screen py-20 px-4 sm:px-6 overflow-y-auto">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
+          <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Featured</span> <span :class="isDark ? 'text-[#89dceb]' : 'text-[#04a5e5]'">Projects</span>
+        </h2>
+        <p :class="['text-center mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">Some of my recent work</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div 
+            v-for="(project, index) in projects" 
+            :key="index"
+            :class="[
+              'rounded-xl border p-6 flex flex-col gap-4 transition-all duration-300 transform hover:scale-105 hover:shadow-lg',
+              isDark 
+                ? 'bg-[#181825] border-[#313244] hover:border-[#cba6f7] hover:shadow-[#cba6f7]/10' 
+                : 'bg-[#e6e9ef] border-[#ccd0da] hover:border-[#8839ef] hover:shadow-[#8839ef]/10'
+            ]"
+          >
+            <h3 :class="['text-xl font-bold', isDark ? 'text-[#cdd6f4]' : 'text-[#4c4f69]']">{{ project.name }}</h3>
+            
+            <div class="flex flex-wrap gap-2">
+              <span 
+                v-for="(tag, tagIndex) in project.tags" 
+                :key="tagIndex"
+                :class="[
+                  'px-3 py-1 rounded-full text-xs font-medium',
+                  isDark 
+                    ? 'bg-[#cba6f7]/20 text-[#cba6f7]' 
+                    : 'bg-[#8839ef]/20 text-[#8839ef]'
+                ]"
+              >
+                {{ tag }}
+              </span>
+            </div>
+            
+            <p :class="['flex-1 text-sm leading-relaxed', isDark ? 'text-[#bac2de]' : 'text-[#5c5f77]']">{{ project.description }}</p>
+            
+            <button 
+              :class="[
+                'w-full py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-102',
+                isDark 
+                  ? 'bg-[#cba6f7] text-[#1e1e2e] hover:bg-[#b4befe]' 
+                  : 'bg-[#8839ef] text-[#eff1f5] hover:bg-[#7287fd]'
+              ]"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="snap-start min-h-screen flex flex-col items-center justify-center py-20 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-3xl sm:text-4xl font-bold mb-4">
           Let's <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Connect</span>
         </h2>
-        <p :class="['mb-12 max-w-xl mx-auto', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">
-          I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-        </p>
+        <p :class="['text-lg mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">I'm always open to new opportunities and collaborations</p>
         
-        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
           <a 
-            v-for="(social, index) in socialLinks" 
+            v-for="(link, index) in socialLinks" 
             :key="index"
-            :href="social.url"
+            :href="link.url"
             target="_blank"
             rel="noopener noreferrer"
             :class="[
-              'group flex items-center gap-3 px-5 sm:px-6 py-3 sm:py-4 border rounded-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1',
+              'flex items-center gap-2 px-6 py-3 rounded-xl border transition-all duration-300 transform hover:scale-105',
               isDark 
-                ? 'bg-[#1e1e2e] border-[#313244] hover:border-[#cba6f7]' 
-                : 'bg-[#eff1f5] border-[#ccd0da] hover:border-[#8839ef]'
+                ? 'bg-[#181825] border-[#313244] text-[#bac2de] hover:border-[#cba6f7] hover:text-[#cba6f7]' 
+                : 'bg-[#e6e9ef] border-[#ccd0da] text-[#5c5f77] hover:border-[#8839ef] hover:text-[#8839ef]'
             ]"
           >
-            <span class="text-2xl sm:text-3xl">{{ social.icon }}</span>
-            <span 
-              :class="[
-                'transition-colors font-medium text-sm sm:text-base',
-                isDark 
-                  ? 'text-[#bac2de] group-hover:text-[#cba6f7]' 
-                  : 'text-[#5c5f77] group-hover:text-[#8839ef]'
-              ]"
-            >
-              {{ social.name }}
-            </span>
-            <svg 
-              :class="[
-                'w-4 h-4 transition-all duration-300',
-                isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]',
-                'opacity-0 group-hover:opacity-100 group-hover:animate-pulse'
-              ]" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
+            <span class="text-2xl">{{ link.icon }}</span>
+            <span class="font-medium">{{ link.name }}</span>
           </a>
         </div>
         
@@ -358,6 +382,12 @@ interface SocialLink {
   url: string;
 }
 
+interface Project {
+  name: string;
+  tags: string[];
+  description: string;
+}
+
 const isDark = ref<boolean>(true);
 const displayText = ref<string>('');
 const fullText: string = 'Stefano Bichicchi';
@@ -375,6 +405,7 @@ const navItems = [
   { label: 'Home', href: '#' },
   { label: 'Works', href: '#works' },
   { label: 'Skills', href: '#skills' },
+  { label: 'Projects', href: '#projects' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -407,13 +438,6 @@ const timeline: TimelineItem[] = [
     period: '2017 - 2018',
     description: 'Started my professional journey working on various web projects using JavaScript, PHP, and MySQL.'
   },
-  {
-    type: 'education',
-    title: "Bachelor's in Software Engineering",
-    company: 'Institute of Technology',
-    period: '2013 - 2017',
-    description: 'Foundation in programming, algorithms, and software development methodologies.'
-  },
 ];
 
 const skills: Skill[] = [
@@ -431,13 +455,30 @@ const skills: Skill[] = [
   { name: 'MongoDB', icon: '🍃', level: 80, colorDark: 'bg-[#a6e3a1]', colorLight: 'bg-[#40a02b]' },
   { name: 'Docker', icon: '🐳', level: 78, colorDark: 'bg-[#89dceb]', colorLight: 'bg-[#04a5e5]' },
   { name: 'Git', icon: '📚', level: 90, colorDark: 'bg-[#fab387]', colorLight: 'bg-[#fe640b]' },
-  { name: 'AWS', icon: '☁️', level: 72, colorDark: 'bg-[#f9e2af]', colorLight: 'bg-[#df8e1d]' },
 ];
 
 const frameworks: string[] = [
   'Nuxt.js', 'Next.js', 'Express.js', 'Fastify', 'Prisma', 'GraphQL',
   'REST API', 'WebSocket', 'Redis', 'Vite', 'Jest', 'Cypress',
   'Storybook', 'Figma', 'Linux', 'Nginx'
+];
+
+const projects: Project[] = [
+  {
+    name: 'E-Commerce Platform',
+    tags: ['Vue.js', 'Node.js', 'PostgreSQL', 'Docker'],
+    description: 'A full-featured e-commerce platform with user authentication, product management, cart functionality, and payment integration. Built with modern technologies and responsive design.'
+  },
+  {
+    name: 'Task Management App',
+    tags: ['React', 'TypeScript', 'MongoDB', 'WebSocket'],
+    description: 'Real-time task management application with drag-and-drop functionality, team collaboration features, and customizable dashboards. Supports live updates and notifications.'
+  },
+  {
+    name: 'Portfolio Generator',
+    tags: ['Nuxt.js', 'Tailwind CSS', 'Vite', 'Markdown'],
+    description: 'A dynamic portfolio generator that allows developers to create beautiful portfolios from Markdown files. Features multiple themes, customization options, and SEO optimization.'
+  }
 ];
 
 const socialLinks: SocialLink[] = [
@@ -506,16 +547,16 @@ const triggerEmojiAnimation = (): void => {
   }
   
   emojiInterval = window.setInterval(() => {
-    currentEmoji.value = emojis[emojiIndex % emojis.length];
-    emojiIndex++;
+    emojiIndex = (emojiIndex + 1) % emojis.length;
+    currentEmoji.value = emojis[emojiIndex];
     iteration++;
     
     if (iteration >= maxIterations) {
+      isAnimating.value = false;
       if (emojiInterval) {
         clearInterval(emojiInterval);
+        emojiInterval = null;
       }
-      currentEmoji.value = emojis[0];
-      isAnimating.value = false;
     }
   }, 100);
 };
