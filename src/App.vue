@@ -95,13 +95,35 @@
     <section class="snap-start min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6">
       <div class="max-w-4xl mx-auto text-center">
         <div class="mb-8">
-          <span 
-            class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
-            :class="{ 'animate-bounce': isAnimating }"
-            @click="triggerEmojiAnimation"
-          >
-            {{ currentEmoji }}
-          </span>
+          <Transition name="emoji-swap" mode="out-in">
+            <span
+              v-if="!isEmojiRolling"
+              key="emoji-default"
+              class="emoji-trigger text-7xl sm:text-8xl md:text-9xl"
+              @click="triggerEmojiAnimation"
+            >
+              {{ currentEmoji }}
+            </span>
+            <span
+              v-else
+              :key="`emoji-animation-${emojiAnimationCycle}`"
+              class="emoji-trigger emoji-roller text-7xl sm:text-8xl md:text-9xl"
+              @click="triggerEmojiAnimation"
+            >
+              <span
+                class="emoji-roller__track"
+                @animationend="handleEmojiAnimationEnd"
+              >
+                <span
+                  v-for="(emoji, index) in emojiAnimationFrames"
+                  :key="`${emoji}-${index}`"
+                  class="emoji-roller__item"
+                >
+                  {{ emoji }}
+                </span>
+              </span>
+            </span>
+          </Transition>
         </div>
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
           Hi, I'm <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Stefano Bichicchi</span>
@@ -334,7 +356,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { nextTick, ref, onMounted, onUnmounted, watch } from 'vue';
 
 interface TimelineItem {
   type: 'work' | 'education';
@@ -366,9 +388,15 @@ const mobileMenuOpen = ref<boolean>(false);
 const currentYear = ref<number>(new Date().getFullYear());
 
 const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
-const currentEmoji = ref<string>(emojis[0]);
-const isAnimating = ref<boolean>(false);
-let emojiInterval: number | null = null;
+const defaultEmoji = emojis[0];
+const emojiAnimationSteps = 15;
+const emojiAnimationFrames: string[] = [
+  defaultEmoji,
+  ...Array.from({ length: emojiAnimationSteps }, (_, index) => emojis[index % emojis.length])
+];
+const currentEmoji = ref<string>(defaultEmoji);
+const isEmojiRolling = ref<boolean>(false);
+const emojiAnimationCycle = ref<number>(0);
 let audioContext: AudioContext | null = null;
 
 const navItems = [
@@ -495,29 +523,19 @@ const typeText = (): void => {
   }
 };
 
+const handleEmojiAnimationEnd = (): void => {
+  isEmojiRolling.value = false;
+  currentEmoji.value = defaultEmoji;
+};
+
 const triggerEmojiAnimation = (): void => {
-  isAnimating.value = true;
-  let emojiIndex = 0;
-  const maxIterations = 15;
-  let iteration = 0;
-  
-  if (emojiInterval) {
-    clearInterval(emojiInterval);
-  }
-  
-  emojiInterval = window.setInterval(() => {
-    currentEmoji.value = emojis[emojiIndex % emojis.length];
-    emojiIndex++;
-    iteration++;
-    
-    if (iteration >= maxIterations) {
-      if (emojiInterval) {
-        clearInterval(emojiInterval);
-      }
-      currentEmoji.value = emojis[0];
-      isAnimating.value = false;
-    }
-  }, 100);
+  currentEmoji.value = defaultEmoji;
+  isEmojiRolling.value = false;
+
+  void nextTick(() => {
+    emojiAnimationCycle.value++;
+    isEmojiRolling.value = true;
+  });
 };
 
 const toggleMobileMenu = (): void => {
@@ -538,7 +556,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (typingInterval) clearInterval(typingInterval);
-  if (emojiInterval) clearInterval(emojiInterval);
 });
 </script>
 
@@ -552,6 +569,59 @@ onUnmounted(() => {
 .slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+.emoji-swap-enter-active,
+.emoji-swap-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.emoji-swap-enter-from,
+.emoji-swap-leave-to {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.emoji-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25em;
+  line-height: 1;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.emoji-roller {
+  height: 1em;
+  overflow: hidden;
+}
+
+.emoji-roller__track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: emoji-carousel 1.5s steps(15, end) forwards;
+  will-change: transform;
+}
+
+.emoji-roller__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+@keyframes emoji-carousel {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-15em);
+  }
 }
 
 html {
