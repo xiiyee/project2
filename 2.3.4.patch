@@ -1,0 +1,124 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..6161c7a 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -95,13 +95,22 @@
+     <section class="snap-start min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6">
+       <div class="max-w-4xl mx-auto text-center">
+         <div class="mb-8">
+-          <span 
+-            class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
+-            :class="{ 'animate-bounce': isAnimating }"
+-            @click="triggerEmojiAnimation"
+-          >
+-            {{ currentEmoji }}
+-          </span>
++          <Transition name="fade" @after-leave="resetEmoji">
++            <div v-if="isAnimating" key="animated" class="relative inline-block cursor-pointer text-7xl sm:text-8xl md:text-9xl" @click="triggerEmojiAnimation">
++              <span v-for="(emoji, index) in animationEmojis" :key="index" class="emoji-item absolute inset-0" :style="{ animationDelay: (index * 100) + 'ms' }">
++                {{ emoji }}
++              </span>
++              <span class="opacity-0">{{ currentEmoji }}</span>
++            </div>
++            <span
++              v-else
++              key="default"
++              class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
++              @click="triggerEmojiAnimation"
++            >
++              {{ currentEmoji }}
++            </span>
++          </Transition>
+         </div>
+         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+           Hi, I'm <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Stefano Bichicchi</span>
+@@ -366,9 +375,9 @@ const mobileMenuOpen = ref<boolean>(false);
+ const currentYear = ref<number>(new Date().getFullYear());
+ 
+ const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
++const animationEmojis: string[] = Array.from({ length: 15 }, (_, i) => emojis[i % emojis.length]);
+ const currentEmoji = ref<string>(emojis[0]);
+ const isAnimating = ref<boolean>(false);
+-let emojiInterval: number | null = null;
+ let audioContext: AudioContext | null = null;
+ 
+ const navItems = [
+@@ -495,29 +504,20 @@ const typeText = (): void => {
+   }
+ };
+ 
++let animationTimeout: number | null = null;
++
+ const triggerEmojiAnimation = (): void => {
+-  isAnimating.value = true;
+-  let emojiIndex = 0;
+-  const maxIterations = 15;
+-  let iteration = 0;
+-  
+-  if (emojiInterval) {
+-    clearInterval(emojiInterval);
++  if (animationTimeout) {
++    clearTimeout(animationTimeout);
+   }
+-  
+-  emojiInterval = window.setInterval(() => {
+-    currentEmoji.value = emojis[emojiIndex % emojis.length];
+-    emojiIndex++;
+-    iteration++;
+-    
+-    if (iteration >= maxIterations) {
+-      if (emojiInterval) {
+-        clearInterval(emojiInterval);
+-      }
+-      currentEmoji.value = emojis[0];
+-      isAnimating.value = false;
+-    }
+-  }, 100);
++  isAnimating.value = true;
++  animationTimeout = window.setTimeout(() => {
++    isAnimating.value = false;
++  }, 1500);
++};
++
++const resetEmoji = (): void => {
++  currentEmoji.value = emojis[0];
+ };
+ 
+ const toggleMobileMenu = (): void => {
+@@ -538,7 +538,7 @@ onMounted(() => {
+ 
+ onUnmounted(() => {
+   if (typingInterval) clearInterval(typingInterval);
+-  if (emojiInterval) clearInterval(emojiInterval);
++  if (animationTimeout) clearTimeout(animationTimeout);
+ });
+ </script>
+ 
+@@ -554,6 +554,27 @@ onUnmounted(() => {
+   transform: translateY(-10px);
+ }
+ 
++.fade-enter-active,
++.fade-leave-active {
++  transition: opacity 0.1s ease;
++}
++
++.fade-enter-from,
++.fade-leave-to {
++  opacity: 0;
++}
++
++.emoji-item {
++  opacity: 0;
++  animation: emojiFlash 0.1s ease forwards;
++  animation-iteration-count: 1;
++}
++
++@keyframes emojiFlash {
++  0%, 100% { opacity: 0; }
++  50% { opacity: 1; }
++}
++
+ html {
+   scroll-behavior: smooth;
+ }
