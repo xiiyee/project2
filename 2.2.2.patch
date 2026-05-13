@@ -1,0 +1,113 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..977c1ab 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -264,6 +264,62 @@
+       </div>
+     </section>
+ 
++    <!-- Projects Section -->
++    <section id="projects" class="snap-start min-h-screen py-20 px-4 sm:px-6 overflow-y-auto">
++      <div class="max-w-6xl mx-auto">
++        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
++          <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Featured</span> & <span :class="isDark ? 'text-[#a6e3a1]' : 'text-[#40a02b]'">Projects</span>
++        </h2>
++        <p :class="['text-center mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">Some of my recent work</p>
++        
++        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
++          <div 
++            v-for="(project, index) in projects" 
++            :key="index"
++            :class="[
++              'group flex flex-col p-6 rounded-xl border transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl',
++              isDark 
++                ? 'bg-[#181825] border-[#313244] hover:border-[#cba6f7] hover:shadow-[#cba6f7]/10' 
++                : 'bg-[#e6e9ef] border-[#ccd0da] hover:border-[#8839ef] hover:shadow-[#8839ef]/10'
++            ]"
++          >
++            <h3 :class="['text-xl font-bold mb-3', isDark ? 'text-[#cdd6f4]' : 'text-[#4c4f69]']">{{ project.name }}</h3>
++            
++            <div class="flex flex-wrap gap-2 mb-4">
++              <span 
++                v-for="(tag, tagIndex) in project.tags" 
++                :key="tagIndex"
++                :class="[
++                  'px-3 py-1 rounded-full text-xs font-medium',
++                  isDark 
++                    ? 'bg-[#313244] text-[#bac2de]' 
++                    : 'bg-[#ccd0da] text-[#5c5f77]'
++                ]"
++              >
++                {{ tag }}
++              </span>
++            </div>
++            
++            <p :class="['text-sm mb-6 flex-grow', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">
++              {{ project.description }}
++            </p>
++            
++            <a 
++              :href="project.link"
++              :class="[
++                'inline-block text-center w-full py-2.5 rounded-lg font-medium transition-colors duration-300',
++                isDark 
++                  ? 'bg-[#cba6f7]/10 text-[#cba6f7] hover:bg-[#cba6f7] hover:text-[#1e1e2e]' 
++                  : 'bg-[#8839ef]/10 text-[#8839ef] hover:bg-[#8839ef] hover:text-[#eff1f5]'
++              ]"
++            >
++              查看详情
++            </a>
++          </div>
++        </div>
++      </div>
++    </section>
++
+     <!-- Footer Section -->
+     <footer 
+       id="contact"
+@@ -352,6 +408,13 @@ interface Skill {
+   colorLight: string;
+ }
+ 
++interface Project {
++  name: string;
++  tags: string[];
++  description: string;
++  link: string;
++}
++
+ interface SocialLink {
+   name: string;
+   icon: string;
+@@ -375,9 +438,31 @@ const navItems = [
+   { label: 'Home', href: '#' },
+   { label: 'Works', href: '#works' },
+   { label: 'Skills', href: '#skills' },
++  { label: 'Projects', href: '#projects' },
+   { label: 'Contact', href: '#contact' },
+ ];
+ 
++const projects: Project[] = [
++  {
++    name: 'E-Commerce Platform',
++    tags: ['Vue.js', 'Node.js', 'PostgreSQL'],
++    description: 'A full-featured e-commerce platform with real-time inventory management, payment processing, and admin dashboard.',
++    link: '#'
++  },
++  {
++    name: 'Task Management App',
++    tags: ['React', 'TypeScript', 'Tailwind'],
++    description: 'A collaborative task management tool with drag-and-drop boards, real-time updates, and team workspaces.',
++    link: '#'
++  },
++  {
++    name: 'AI Content Generator',
++    tags: ['Python', 'FastAPI', 'Vue.js'],
++    description: 'An AI-powered application that generates high-quality marketing copy, blog posts, and social media content.',
++    link: '#'
++  }
++];
++
+ const timeline: TimelineItem[] = [
+   {
+     type: 'work',
