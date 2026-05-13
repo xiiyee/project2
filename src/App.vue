@@ -264,8 +264,73 @@
       </div>
     </section>
 
+    <!-- Blog Section -->
+    <section id="blog" class="snap-start min-h-screen py-20 px-4 sm:px-6 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
+          <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Blog</span>
+        </h2>
+        <p :class="['text-center mb-12', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">
+          Thoughts, tutorials, and insights on web development
+        </p>
+
+        <div class="grid gap-6">
+          <div
+            v-for="(article, index) in blogPreview"
+            :key="index"
+            :class="[
+              'p-6 rounded-xl border transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1',
+              isDark
+                ? 'bg-[#181825] border-[#313244] hover:border-[#cba6f7]'
+                : 'bg-[#e6e9ef] border-[#ccd0da] hover:border-[#8839ef]'
+            ]"
+          >
+            <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+              <div
+                :class="[
+                  'w-full sm:w-20 h-20 flex items-center justify-center rounded-lg shrink-0',
+                  isDark ? 'bg-[#313244]' : 'bg-[#ccd0da]'
+                ]"
+              >
+                <span class="text-3xl">{{ article.icon }}</span>
+              </div>
+              <div class="flex-1">
+                <h3 :class="['text-lg font-bold mb-2', isDark ? 'text-[#cdd6f4]' : 'text-[#4c4f69]']">
+                  {{ article.title }}
+                </h3>
+                <p :class="['text-sm mb-3 line-clamp-2', isDark ? 'text-[#bac2de]' : 'text-[#5c5f77]']">
+                  {{ article.summary }}
+                </p>
+                <div class="flex flex-wrap items-center gap-3 text-xs" :class="isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]'">
+                  <span>{{ article.date }}</span>
+                  <span>•</span>
+                  <span>{{ article.readTime }} min read</span>
+                  <div class="flex flex-wrap gap-1 ml-auto">
+                    <span
+                      v-for="(tag, tagIndex) in article.tags.slice(0, 2)"
+                      :key="tagIndex"
+                      :class="[
+                        'px-2 py-0.5 rounded text-xs',
+                        isDark ? 'bg-[#313244] text-[#cba6f7]' : 'bg-[#ccd0da] text-[#8839ef]'
+                      ]"
+                    >
+                      {{ tag }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p :class="['text-center mt-8 text-sm', isDark ? 'text-[#a6adc8]' : 'text-[#6c6f85]']">
+          View all articles →
+        </p>
+      </div>
+    </section>
+
     <!-- Footer Section -->
-    <footer 
+    <footer
       id="contact"
       :class="[
         'snap-start min-h-screen flex items-center px-4 sm:px-6 transition-colors duration-500',
@@ -373,6 +438,7 @@ let audioContext: AudioContext | null = null;
 
 const navItems = [
   { label: 'Home', href: '#' },
+  { label: 'Blog', href: '#blog' },
   { label: 'Works', href: '#works' },
   { label: 'Skills', href: '#skills' },
   { label: 'Contact', href: '#contact' },
@@ -438,6 +504,42 @@ const frameworks: string[] = [
   'Nuxt.js', 'Next.js', 'Express.js', 'Fastify', 'Prisma', 'GraphQL',
   'REST API', 'WebSocket', 'Redis', 'Vite', 'Jest', 'Cypress',
   'Storybook', 'Figma', 'Linux', 'Nginx'
+];
+
+interface Article {
+  title: string;
+  date: string;
+  summary: string;
+  readTime: number;
+  tags: string[];
+  icon: string;
+}
+
+const blogPreview: Article[] = [
+  {
+    title: 'Building Scalable Vue.js Applications with TypeScript',
+    date: '2024-03-15',
+    summary: 'A comprehensive guide on structuring large-scale Vue.js projects using TypeScript, composition API, and modern best practices.',
+    readTime: 8,
+    tags: ['Vue.js', 'TypeScript', 'Architecture'],
+    icon: '💻'
+  },
+  {
+    title: 'The Art of CSS: Mastering Modern Layout Techniques',
+    date: '2024-02-28',
+    summary: 'Exploring the evolution of CSS layouts from floats to Grid and Flexbox. Learn how to create responsive designs.',
+    readTime: 12,
+    tags: ['CSS', 'Frontend', 'Design'],
+    icon: '🎨'
+  },
+  {
+    title: 'Understanding Node.js Event Loop Architecture',
+    date: '2024-01-20',
+    summary: 'Dive deep into Node.js event-driven architecture, the event loop phases, and how to write high-performance async code.',
+    readTime: 15,
+    tags: ['Node.js', 'Performance', 'Backend'],
+    icon: '🚀'
+  }
 ];
 
 const socialLinks: SocialLink[] = [
