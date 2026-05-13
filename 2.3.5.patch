@@ -1,0 +1,141 @@
+diff --git a/src/App.vue b/src/App.vue
+index 4769225..f477c78 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -95,13 +95,22 @@
+     <section class="snap-start min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6">
+       <div class="max-w-4xl mx-auto text-center">
+         <div class="mb-8">
+-          <span 
+-            class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
+-            :class="{ 'animate-bounce': isAnimating }"
+-            @click="triggerEmojiAnimation"
+-          >
+-            {{ currentEmoji }}
+-          </span>
++          <div class="relative inline-block h-[1em] overflow-hidden">
++            <Transition 
++              name="emoji-fade" 
++              mode="out-in"
++              @after-enter="onEmojiTransitionComplete"
++            >
++              <span 
++                :key="currentEmojiIndex"
++                class="text-7xl sm:text-8xl md:text-9xl inline-block cursor-pointer"
++                :class="{ 'emoji-spin': isAnimating }"
++                @click="triggerEmojiAnimation"
++              >
++                {{ emojis[currentEmojiIndex] }}
++              </span>
++            </Transition>
++          </div>
+         </div>
+         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+           Hi, I'm <span :class="isDark ? 'text-[#cba6f7]' : 'text-[#8839ef]'">Stefano Bichicchi</span>
+@@ -366,9 +375,10 @@ const mobileMenuOpen = ref<boolean>(false);
+ const currentYear = ref<number>(new Date().getFullYear());
+ 
+ const emojis: string[] = ['👨‍💻', '🚀', '💡', '🎯', '☕', '✨', '🔥', '💻'];
+-const currentEmoji = ref<string>(emojis[0]);
++const currentEmojiIndex = ref<number>(0);
+ const isAnimating = ref<boolean>(false);
+-let emojiInterval: number | null = null;
++const animationIteration = ref<number>(0);
++const maxIterations = 15;
+ let audioContext: AudioContext | null = null;
+ 
+ const navItems = [
+@@ -496,28 +506,24 @@ const typeText = (): void => {
+ };
+ 
+ const triggerEmojiAnimation = (): void => {
++  if (isAnimating.value) return;
++  
+   isAnimating.value = true;
+-  let emojiIndex = 0;
+-  const maxIterations = 15;
+-  let iteration = 0;
++  animationIteration.value = 1;
++  currentEmojiIndex.value = 1 % emojis.length;
++};
++
++const onEmojiTransitionComplete = (): void => {
++  if (!isAnimating.value) return;
+   
+-  if (emojiInterval) {
+-    clearInterval(emojiInterval);
++  if (animationIteration.value >= maxIterations) {
++    currentEmojiIndex.value = 0;
++    isAnimating.value = false;
++    animationIteration.value = 0;
++  } else {
++    animationIteration.value++;
++    currentEmojiIndex.value = animationIteration.value % emojis.length;
+   }
+-  
+-  emojiInterval = window.setInterval(() => {
+-    currentEmoji.value = emojis[emojiIndex % emojis.length];
+-    emojiIndex++;
+-    iteration++;
+-    
+-    if (iteration >= maxIterations) {
+-      if (emojiInterval) {
+-        clearInterval(emojiInterval);
+-      }
+-      currentEmoji.value = emojis[0];
+-      isAnimating.value = false;
+-    }
+-  }, 100);
+ };
+ 
+ const toggleMobileMenu = (): void => {
+@@ -538,7 +544,6 @@ onMounted(() => {
+ 
+ onUnmounted(() => {
+   if (typingInterval) clearInterval(typingInterval);
+-  if (emojiInterval) clearInterval(emojiInterval);
+ });
+ </script>
+ 
+@@ -593,4 +598,41 @@ html {
+     scroll-behavior: smooth;
+   }
+ }
++
++.emoji-fade-enter-active,
++.emoji-fade-leave-active {
++  transition: all 0.1s ease-in-out;
++}
++
++.emoji-fade-enter-from {
++  opacity: 0;
++  transform: scale(0.8) rotate(-10deg);
++}
++
++.emoji-fade-leave-to {
++  opacity: 0;
++  transform: scale(0.8) rotate(10deg);
++}
++
++.emoji-spin {
++  animation: emoji-spin-animation 0.1s ease-in-out infinite;
++}
++
++@keyframes emoji-spin-animation {
++  0% {
++    transform: scale(1) rotate(0deg);
++  }
++  25% {
++    transform: scale(1.05) rotate(-3deg);
++  }
++  50% {
++    transform: scale(1) rotate(0deg);
++  }
++  75% {
++    transform: scale(1.05) rotate(3deg);
++  }
++  100% {
++    transform: scale(1) rotate(0deg);
++  }
++}
+ </style>
